@@ -65,6 +65,63 @@ nav ul li a:hover {
     color: #ff6347;
 }
 
+#cart-icon{
+    position: relative;
+}
+
+#cart-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #ff6347;
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 50%;
+    font-size: 12px;
+}
+
+.cart-items-container {
+    position: fixed;
+    right: 10px;
+    top: 50px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    width: 300px;
+    padding: 10px;
+    z-index: 1000;
+  }
+  
+  .cart-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .cart-total {
+    font-weight: bold;
+    margin-top: 10px;
+    text-align: right;
+  }
+  
+  #checkout-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  #checkout-btn:hover {
+    background-color: #218838;
+  }
+  
+
 /* Main section styles */
 .main {
     display: flex;
@@ -383,6 +440,113 @@ footer {
     color: #999;
 }
 
+
+/*back to top button*/
+
+.back-to-top{
+    position: fixed;
+    bottom: 50px;
+    right: 30px;
+    background: #ff6347;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 18px;
+    display: none;
+    transition: background 0.3s ease;
+    text-decoration: none;
+}
+
+.back-to-top:hover {
+    background: #333;
+}
+
+
+
+/*login/sign up */
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+}
+
+nav .icons i {
+    margin: 0 0.5rem;
+    cursor: pointer;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 400px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+}
+
+form input {
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 16px;
+}
+
+form button {
+    padding: 10px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #45a049;
+}
+
+p {
+    margin-top: 15px;
+    text-align: center;
+}
+
+
 /* Responsive styles */
 @media (max-width: 768px) {
     nav {
@@ -403,5 +567,10 @@ footer {
 
     .products .box, .services_cards {
         align-items: stretch;
+    }
+
+    .back-to-top {
+        bottom: 20px;
+        right: 20px;
     }
 }
