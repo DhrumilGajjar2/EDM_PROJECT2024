@@ -1,161 +1,85 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Cart logic
-    const cart = [];
-    const cartIcon = document.getElementById('cart-icon');
-    const cartCount = document.getElementById('cart-count');
+document.addEventListener("DOMContentLoaded", () => {
+    const backToTopButton = document.getElementById("back-to-top");
+    const cartIcon = document.getElementById("cart-icon");
+    const authModal = document.getElementById("auth-modal");
+    const closeModal = document.querySelector(".close");
+    const showSignup = document.getElementById("show-signup");
+    const showLogin = document.getElementById("show-login");
+    const loginForm = document.getElementById("login-form");
+    const signupForm = document.getElementById("signup-form");
 
-    function addCart(product) {
-        const cartItem = cart.find(item => item.id === product.id);
-        if(cartItem) {
-            cartItem.quantity++;
+    window.addEventListener("scroll", () => {
+        if (window.pageYOffset > 300) {
+            backToTopButton.style.display = "block";
         } else {
-            cart.push({...product, quantity: 1});
+            backToTopButton.style.display = "none";
         }
-        updateCart();
-    }
+    });
 
-    function updateCart() {
-        cartCount.textContent = cart.reduce((total, item) => total + item.quantity, 0);
+    backToTopButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    });
 
-        let cartItemsContainer = document.getElementById('cart-items-container');
-        if (!cartItemsContainer) {
-            cartItemsContainer = document.createElement('div');
-            cartItemsContainer.id = 'cart-items-container';
-            cartItemsContainer.className = 'cart-items-container';
-        } else {
-            cartItemsContainer.innerHTML = '';
-        }
-
-        let total = 0;
-
-        cart.forEach(item => {
-            const itemElement = document.createElement('div');
-            itemElement.className = 'cart-item';
+    cartIcon.addEventListener("click", () => {
+        const cartItemsContainer = document.getElementById("cart-items");
+        cartItemsContainer.innerHTML = "";
+        const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+        cartItems.forEach(item => {
+            const itemElement = document.createElement("div");
+            itemElement.className = "cart-item";
             itemElement.innerHTML = `
-                <span>${item.name}</span>
-                <span>$${item.price} x ${item.quantity}</span>
+                <h4>${item.name}</h4>
+                <p>${item.price}</p>
+                <button class="remove-from-cart" data-id="${item.id}">Remove</button>
             `;
             cartItemsContainer.appendChild(itemElement);
-            total += item.price * item.quantity;
         });
+        authModal.style.display = "flex";
+    });
 
-        const totalElement = document.createElement('div');
-        totalElement.className = 'cart-total';
-        totalElement.innerHTML = `Total: $${total.toFixed(2)}`;
+    closeModal.addEventListener("click", () => {
+        authModal.style.display = "none";
+    });
 
-        cartItemsContainer.appendChild(totalElement);
-
-        const checkoutBtn = document.createElement('button');
-        checkoutBtn.id = 'checkout-btn';
-        checkoutBtn.textContent = 'Checkout';
-        checkoutBtn.addEventListener('click', () => {
-            alert('Proceeding to checkout!');
-        });
-
-        cartItemsContainer.appendChild(checkoutBtn);
-
-        document.body.appendChild(cartItemsContainer);
-    }
-
-    cartIcon.addEventListener('click', () => {
-        const cartItemsContainer = document.getElementById('cart-items-container');
-        if (cartItemsContainer) {
-            cartItemsContainer.remove();
-        } else {
-            updateCart();
+    window.addEventListener("click", (e) => {
+        if (e.target == authModal) {
+            authModal.style.display = "none";
         }
     });
 
-    // Back-to-top button logic
-    const backToTopButton = document.getElementById('back-to-top');
-
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 500) {
-            backToTopButton.style.display = 'block';
-        } else {
-            backToTopButton.style.display = 'none';
+    document.body.addEventListener("click", (e) => {
+        if (e.target.classList.contains("remove-from-cart")) {
+            const itemId = e.target.dataset.id;
+            let cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+            cartItems = cartItems.filter(item => item.id !== itemId);
+            localStorage.setItem("cartItems", JSON.stringify(cartItems));
+            e.target.parentElement.remove();
         }
     });
 
-    backToTopButton.addEventListener('click', (e) => {
+    showSignup.addEventListener("click", () => {
+        signupForm.classList.add("active");
+        loginForm.classList.remove("active");
+    });
+
+    showLogin.addEventListener("click", () => {
+        loginForm.classList.add("active");
+        signupForm.classList.remove("active");
+    });
+
+    document.getElementById("login-button").addEventListener("click", (e) => {
         e.preventDefault();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const email = document.getElementById("login-email").value;
+        const password = document.getElementById("login-password").value;
+        // Validate login credentials and handle login logic
     });
 
-    // Form validation
-    const subscribeButton = document.querySelector('.search_bar button');
-    const emailInput = document.querySelector('.search_bar input');
-
-    subscribeButton.addEventListener('click', (e) => {
+    document.getElementById("signup-button").addEventListener("click", (e) => {
         e.preventDefault();
-        const email = emailInput.value;
-        if (validateEmail(email)) {
-            alert('Thank you for subscribing!');
-        } else {
-            alert('Please enter a valid email address.');
-        }
-    });
-
-    function validateEmail(email) {
-        const re = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-        return re.test(String(email).toLowerCase());
-    }
-});
-
-
-//login&sign up logic
-
-document.addEventListener('DOMContentLoaded', function() {
-    const userIcon = document.getElementById('user-icon');
-    const authModal = document.getElementById('auth-modal');
-    const closeModal = document.querySelector('.close');
-    const loginForm = document.getElementById('login-form');
-    const signupForm = document.getElementById('signup-form');
-    const showSignup = document.getElementById('show-signup');
-    const showLogin = document.getElementById('show-login');
-
-    userIcon.addEventListener('click', () => {
-        authModal.style.display = 'block';
-        loginForm.style.display = 'block';
-        signupForm.style.display = 'none';
-    });
-
-    closeModal.addEventListener('click', () => {
-        authModal.style.display = 'none';
-    });
-
-    window.addEventListener('click', (event) => {
-        if (event.target === authModal) {
-            authModal.style.display = 'none';
-        }
-    });
-
-    showSignup.addEventListener('click', (e) => {
-        e.preventDefault();
-        loginForm.style.display = 'none';
-        signupForm.style.display = 'block';
-    });
-
-    showLogin.addEventListener('click', (e) => {
-        e.preventDefault();
-        loginForm.style.display = 'block';
-        signupForm.style.display = 'none';
-    });
-
-    document.getElementById('login').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const email = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
-        // Perform login logic here (e.g., send to server)
-        alert('Logged in with email: ' + email);
-    });
-
-    document.getElementById('signup').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const username = document.getElementById('signup-username').value;
-        const email = document.getElementById('signup-email').value;
-        const password = document.getElementById('signup-password').value;
-        // Perform signup logic here (e.g., send to server)
-        alert('Signed up with username: ' + username);
+        const name = document.getElementById("signup-name").value;
+        const email = document.getElementById("signup-email").value;
+        const password = document.getElementById("signup-password").value;
+        // Validate signup data and handle signup logic
     });
 });
