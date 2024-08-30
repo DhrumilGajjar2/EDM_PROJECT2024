@@ -1,85 +1,100 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const backToTopButton = document.getElementById("back-to-top");
-    const cartIcon = document.getElementById("cart-icon");
-    const authModal = document.getElementById("auth-modal");
-    const closeModal = document.querySelector(".close");
-    const showSignup = document.getElementById("show-signup");
-    const showLogin = document.getElementById("show-login");
-    const loginForm = document.getElementById("login-form");
-    const signupForm = document.getElementById("signup-form");
+// Back to Top Button Functionality
+const backToTopButton = document.getElementById("back-to-top");
 
-    window.addEventListener("scroll", () => {
-        if (window.pageYOffset > 300) {
-            backToTopButton.style.display = "block";
-        } else {
-            backToTopButton.style.display = "none";
-        }
+window.onscroll = function() {
+    if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+        backToTopButton.style.display = "block";
+    } else {
+        backToTopButton.style.display = "none";
+    }
+};
+
+backToTopButton.addEventListener("click", function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// Cart Functionality
+let cartItems = [];
+let cartCount = 0;
+const cartCountElement = document.getElementById("cart-count");
+const cartIcon = document.getElementById("cart-icon");
+const cartItemsContainer = document.getElementById("cart-items-container");
+
+document.querySelectorAll(".add-to-cart").forEach(function(btn) {
+    btn.addEventListener("click", function(event) {
+        event.preventDefault();
+
+        const productName = this.dataset.name;
+        const productPrice = parseFloat(this.dataset.price);
+
+        const product = {
+            name: productName,
+            price: productPrice
+        };
+
+        cartItems.push(product);
+        cartCount++;
+        cartCountElement.innerText = cartCount;
+
+        // Display Cart Items
+        displayCartItems();
     });
+});
 
-    backToTopButton.addEventListener("click", (e) => {
-        e.preventDefault();
-        window.scrollTo({ top: 0, behavior: "smooth" });
+cartIcon.addEventListener("click", function() {
+    cartItemsContainer.style.display = cartItemsContainer.style.display === "none" ? "block" : "none";
+});
+
+function displayCartItems() {
+    cartItemsContainer.innerHTML = '';
+    cartItems.forEach(function(item, index) {
+        const itemElement = document.createElement("div");
+        itemElement.classList.add("cart-item");
+        itemElement.innerHTML = `<p>${item.name} - $${item.price.toFixed(2)}</p>`;
+        cartItemsContainer.appendChild(itemElement);
     });
+}
 
-    cartIcon.addEventListener("click", () => {
-        const cartItemsContainer = document.getElementById("cart-items");
-        cartItemsContainer.innerHTML = "";
-        const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-        cartItems.forEach(item => {
-            const itemElement = document.createElement("div");
-            itemElement.className = "cart-item";
-            itemElement.innerHTML = `
-                <h4>${item.name}</h4>
-                <p>${item.price}</p>
-                <button class="remove-from-cart" data-id="${item.id}">Remove</button>
-            `;
-            cartItemsContainer.appendChild(itemElement);
-        });
-        authModal.style.display = "flex";
-    });
+// Auth Modal Functionality
+const authModal = document.getElementById("auth-modal");
+const closeAuthModalBtn = document.querySelector(".modal .close");
+const userIcon = document.getElementById("user-icon");
+const showLoginBtn = document.getElementById("show-login");
+const showSignupBtn = document.getElementById("show-signup");
+const loginForm = document.getElementById("login-form");
+const signupForm = document.getElementById("signup-form");
 
-    closeModal.addEventListener("click", () => {
+userIcon.addEventListener("click", function() {
+    authModal.style.display = "block";
+});
+
+closeAuthModalBtn.addEventListener("click", function() {
+    authModal.style.display = "none";
+});
+
+window.addEventListener("click", function(event) {
+    if (event.target === authModal) {
         authModal.style.display = "none";
-    });
+    }
+});
 
-    window.addEventListener("click", (e) => {
-        if (e.target == authModal) {
-            authModal.style.display = "none";
-        }
-    });
+showLoginBtn.addEventListener("click", function() {
+    loginForm.style.display = "block";
+    signupForm.style.display = "none";
+});
 
-    document.body.addEventListener("click", (e) => {
-        if (e.target.classList.contains("remove-from-cart")) {
-            const itemId = e.target.dataset.id;
-            let cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-            cartItems = cartItems.filter(item => item.id !== itemId);
-            localStorage.setItem("cartItems", JSON.stringify(cartItems));
-            e.target.parentElement.remove();
-        }
-    });
+showSignupBtn.addEventListener("click", function() {
+    signupForm.style.display = "block";
+    loginForm.style.display = "none";
+});
 
-    showSignup.addEventListener("click", () => {
-        signupForm.classList.add("active");
-        loginForm.classList.remove("active");
-    });
+// Prevent form submission for demo
+document.getElementById("login").addEventListener("submit", function(event) {
+    event.preventDefault();
+    alert("Login form submitted!");
+});
 
-    showLogin.addEventListener("click", () => {
-        loginForm.classList.add("active");
-        signupForm.classList.remove("active");
-    });
-
-    document.getElementById("login-button").addEventListener("click", (e) => {
-        e.preventDefault();
-        const email = document.getElementById("login-email").value;
-        const password = document.getElementById("login-password").value;
-        // Validate login credentials and handle login logic
-    });
-
-    document.getElementById("signup-button").addEventListener("click", (e) => {
-        e.preventDefault();
-        const name = document.getElementById("signup-name").value;
-        const email = document.getElementById("signup-email").value;
-        const password = document.getElementById("signup-password").value;
-        // Validate signup data and handle signup logic
-    });
+document.getElementById("signup").addEventListener("submit", function(event) {
+    event.preventDefault();
+    alert("Signup form submitted!");
 });
