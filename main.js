@@ -55,7 +55,7 @@ function displayCartItems() {
     });
 }
 
-// Auth Modal Functionality
+// Auth Modal Functionality   //not working?
 const authModal = document.getElementById("auth-modal");
 const closeAuthModalBtn = document.querySelector(".modal .close");
 const userIcon = document.getElementById("user-icon");
@@ -88,7 +88,7 @@ showSignupBtn.addEventListener("click", function() {
     loginForm.style.display = "none";
 });
 
-// Prevent form submission for demo
+// Prevent form submission for demo    //not working?
 document.getElementById("login").addEventListener("submit", function(event) {
     event.preventDefault();
     alert("Login form submitted!");
